@@ -1,4 +1,4 @@
-axios.defaults.headers.common['Authorization'] = 'ttqJn7RegtZYwPr8fvIDN6Fx';
+axios.defaults.headers.common['Authorization'] = 'B3KyK8rF2fzyZiB6ivgwn4Vu';
 
 let User;
 let listUser = {};
@@ -10,6 +10,7 @@ let segundos = agora.getSeconds();
 let tempo = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 let destinatario = 'Todos'
 let mensagens = axios.get('https://mock-api.driven.com.br/api/vm/uol/messages');
+let msn;
 
 function tratarSucesso(resposta){
     console.log(resposta.data);
@@ -37,48 +38,67 @@ function nameUser(){
     tempo = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 
     chat.innerHTML += `
-    <li class="mensagem entrada">
+    <li data-test="message" class="mensagem entrada">
         <p>(${tempo})  <strong>${User}</strong>  entrou na sala...</p>
     </li>`
 }
 
 
-function loadError(){
-    console.log('erro ao carregar as mensagens');
+function loadError(resNok){
+    console.log(resNok);
 }
+
+function loadOk(resok){
+    //console.log(resok.data);
+    x = [];
+    x = resok.data;
+    chat = '';
+    chat = document.querySelector('.chat');
+    for(c = 0; c < 100; c++){
+        if(x[c].type == "message"){
+            chat.innerHTML+= `
+                <li data-test="message" class="mensagem">
+                    <p>(${x[c].time}) <strong>${x[c].from}</strong> para <strong>${x[c].to}</strong>: ${x[c].text}</p>
+                </li>`
+        }
+        else{
+            chat.innerHTML+= `
+                <li data-test="message" class="mensagem entrada">
+                    <p>(${x[c].time}) <strong>${x[c].from}</strong> para <strong>${x[c].to}</strong>: ${x[c].text}</p>
+                </li>`
+        }
+    }
+    console.log(chat);
+}
+
 
 function loadChat(){
     let mensagens = axios.get('https://mock-api.driven.com.br/api/vm/uol/messages');
     mensagens.then(loadOk);
-    mensagens.catch(loadError);
+    mensagens.catch(loadError);    
+}
 
-    function loadOk(ok){
-        console.log(ok.data);
-        for(c = 0; c < 100; c++){
-            chat.innerHTML+= `
-                <li class="mensagem">
-                    <p>(${mensagens[c].time}) <strong>${mensagens[c].from}</strong> para <strong>${mensagens[c].to}</strong>: ${mensagens[c].text}</p>
-                </li>`
-        }
-    }
+function addOk(ok){
+    console.log(ok.data);
     
 }
 
 function addMsn(){
-    let mensagem = document.querySelector('.input');
-    console.log(mensagem);
-    agora = new Date();
-    hora = agora.getHours();
-    minutos = agora.getMinutes();
-    segundos = agora.getSeconds();
-    tempo = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 
-    
-    chat.innerHTML += `
-            <li class="mensagem">
-                <p>(${tempo}) <strong>${User}</strong> para <strong>${destinatario}</strong>: ${mensagem.value}</p>
-            </li>`
+    let mensagem = document.querySelector('.input');
+    msn =   {
+        from: User,
+        to: destinatario,
+        text: mensagem.value,
+        type: "message"
+        };
+
+    let promessa = axios.post('https://mock-api.driven.com.br/api/vm/uol/messages', msn);
+    promessa.then(addOk);
+    promessa.catch(loadError)
+    loadChat();
 }
 
 loadChat();
+setInterval(loadChat, 10000);
 nameUser();
