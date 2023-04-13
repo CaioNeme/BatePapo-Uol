@@ -1,4 +1,4 @@
-axios.defaults.headers.common['Authorization'] = 'B3KyK8rF2fzyZiB6ivgwn4Vu';
+axios.defaults.headers.common['Authorization'] = 'w8LzS8OzBL6GzEVafs3nJb6E';
 
 let User;
 let listUser = {};
@@ -13,13 +13,14 @@ let mensagens = axios.get('https://mock-api.driven.com.br/api/vm/uol/messages');
 let msn;
 
 function tratarSucesso(resposta){
-    console.log(resposta.data);
     alert(`Seja bem-vindo, ${User}`)
+    setInterval(loadChat, 3000);
+    setInterval(taOn, 5000);
 
 }
 
 function TratarErro(erro){
-    console.log(resposta.data);
+    console.log(erro.data);
     alert(`O nome de usuario: ${User}, não esta disponivel por favor digite outro`);
     User = prompt('Qual é o seu nome?');
 }
@@ -31,33 +32,40 @@ function nameUser(){
     promessa.then(tratarSucesso);
     promessa.catch(TratarErro);
 
-    agora = new Date();
-    hora = agora.getHours();
-    minutos = agora.getMinutes();
-    segundos = agora.getSeconds();
-    tempo = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-
-    chat.innerHTML += `
-    <li data-test="message" class="mensagem entrada">
-        <p>(${tempo})  <strong>${User}</strong>  entrou na sala...</p>
-    </li>`
 }
 
+function onNehBB(res){
+    console.log('Online');
+}
+
+function taOn(){
+    let on = {
+        name: User
+      };
+    let promessa = axios.post('https://mock-api.driven.com.br/api/vm/uol/status', on);
+    promessa.then(onNehBB);
+}
 
 function loadError(resNok){
     console.log(resNok);
+    alert('Erro ao carregar as mensagens');
 }
 
 function loadOk(resok){
-    //console.log(resok.data);
     x = [];
     x = resok.data;
-    chat = '';
-    chat = document.querySelector('.chat');
+    
+    chat.innerHTML = null;
     for(c = 0; c < 100; c++){
         if(x[c].type == "message"){
             chat.innerHTML+= `
                 <li data-test="message" class="mensagem">
+                    <p>(${x[c].time}) <strong>${x[c].from}</strong> para <strong>${x[c].to}</strong>: ${x[c].text}</p>
+                </li>`
+        }
+        else if(x[c].type == "private_message"){
+            chat.innerHTML+= `
+                <li data-test="message" class="mensagem privada">
                     <p>(${x[c].time}) <strong>${x[c].from}</strong> para <strong>${x[c].to}</strong>: ${x[c].text}</p>
                 </li>`
         }
@@ -68,7 +76,6 @@ function loadOk(resok){
                 </li>`
         }
     }
-    console.log(chat);
 }
 
 
@@ -83,6 +90,10 @@ function addOk(ok){
     
 }
 
+function addErro(erro){
+    console.log(erro.data);
+    alert('Você está offline no chat de BatePapo da UOL')
+}
 function addMsn(){
 
     let mensagem = document.querySelector('.input');
@@ -95,10 +106,8 @@ function addMsn(){
 
     let promessa = axios.post('https://mock-api.driven.com.br/api/vm/uol/messages', msn);
     promessa.then(addOk);
-    promessa.catch(loadError)
-    loadChat();
+    promessa.catch(addErro)
 }
 
 loadChat();
-setInterval(loadChat, 10000);
 nameUser();

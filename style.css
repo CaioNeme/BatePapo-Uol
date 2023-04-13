@@ -48,6 +48,10 @@ strong{
     display: flex;
     align-items: center;
 }
+.privada{
+    background-color: #FFDEDE;
+}
+
 .entrada{
     background-color: #AAAAAA;
 }
