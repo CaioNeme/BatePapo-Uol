@@ -39,12 +39,19 @@ function onNehBB(res){
     console.log('Online');
 }
 
+function desOn(res){
+    alert('Você está offline');
+    nameUser();
+}
+
+
 function taOn(){
     let on = {
         name: User
       };
     let promessa = axios.post('https://mock-api.driven.com.br/api/vm/uol/status', on);
     promessa.then(onNehBB);
+    promessa.catch();
 }
 
 function loadError(resNok){
@@ -95,8 +102,8 @@ function addOk(ok){
 function addErro(erro){
     console.log(erro.data);
     alert('Você está offline no chat de BatePapo da UOL')
-    location.reload();
 }
+
 function addMsn(){
 
     let mensagem = document.querySelector('.input');
