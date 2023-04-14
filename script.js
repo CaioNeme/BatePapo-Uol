@@ -51,7 +51,7 @@ function taOn(){
       };
     let promessa = axios.post('https://mock-api.driven.com.br/api/vm/uol/status', on);
     promessa.then(onNehBB);
-    promessa.catch();
+    promessa.catch(desOn);
 }
 
 function loadError(resNok){
