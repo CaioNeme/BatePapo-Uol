@@ -39,13 +39,14 @@ strong{
     border-radius: 2px;
 
     width: 375px;
-    height: 40px;
+    min-height: 40px;
 
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
 
     display: flex;
+    justify-content: start;
     align-items: center;
 }
 .privada{

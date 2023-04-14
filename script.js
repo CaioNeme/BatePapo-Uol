@@ -13,6 +13,7 @@ let mensagens = axios.get('https://mock-api.driven.com.br/api/vm/uol/messages');
 let msn;
 
 function tratarSucesso(resposta){
+    loadChat();
     alert(`Seja bem-vindo, ${User}`)
     setInterval(loadChat, 3000);
     setInterval(taOn, 5000);
@@ -22,7 +23,7 @@ function tratarSucesso(resposta){
 function TratarErro(erro){
     console.log(erro.data);
     alert(`O nome de usuario: ${User}, não esta disponivel por favor digite outro`);
-    User = prompt('Qual é o seu nome?');
+    nameUser();
 }
 
 function nameUser(){
@@ -107,7 +108,14 @@ function addMsn(){
     let promessa = axios.post('https://mock-api.driven.com.br/api/vm/uol/messages', msn);
     promessa.then(addOk);
     promessa.catch(addErro)
+    mensagem.value = null;
 }
 
-loadChat();
+document.addEventListener('keypress', function(e){
+    if(e.which == 13){
+                addMsn();
+       }
+    }, false);
+
+
 nameUser();
