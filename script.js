@@ -1,4 +1,4 @@
-axios.defaults.headers.common['Authorization'] = 'w8LzS8OzBL6GzEVafs3nJb6E';
+axios.defaults.headers.common['Authorization'] = 'gAjPWwQcFpAghDQXU82X9y8G';
 
 let User;
 let listUser = {};
@@ -13,8 +13,8 @@ let mensagens = axios.get('https://mock-api.driven.com.br/api/vm/uol/messages');
 let msn;
 
 function tratarSucesso(resposta){
-    loadChat();
     alert(`Seja bem-vindo, ${User}`)
+    loadChat();
     setInterval(loadChat, 3000);
     setInterval(taOn, 5000);
 
@@ -88,12 +88,14 @@ function loadChat(){
 
 function addOk(ok){
     console.log(ok.data);
+    loadChat();
     
 }
 
 function addErro(erro){
     console.log(erro.data);
     alert('Você está offline no chat de BatePapo da UOL')
+    location.reload();
 }
 function addMsn(){
 
@@ -113,8 +115,8 @@ function addMsn(){
 
 document.addEventListener('keypress', function(e){
     if(e.which == 13){
-                addMsn();
-       }
+        addMsn();
+    }
     }, false);
 
 
