@@ -1,4 +1,4 @@
-axios.defaults.headers.common['Authorization'] = 'gAjPWwQcFpAghDQXU82X9y8G';
+axios.defaults.headers.common['Authorization'] = 'F6toHgNbIjrMErn8Z21A2QYy';
 
 let User;
 let listUser = {};
@@ -101,7 +101,7 @@ function addOk(ok){
 
 function addErro(erro){
     console.log(erro.data);
-    alert('Você está offline no chat de BatePapo da UOL')
+    alert('Você está offline no chat de BatePapo da UOL ou digitou uma mensagem invalida')
 }
 
 function addMsn(){
